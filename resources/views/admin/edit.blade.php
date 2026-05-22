@@ -1,30 +1,42 @@
-<x-appadmin-layout>
-    <div class="container mt-5">
-        <h1>Edit User</h1>
+@extends('layouts.admin') {{-- Sesuaikan dengan nama template admin Anda --}}
 
-        <form action="{{ route('users.update', $user->id) }}" method="POST">
-            @csrf
-            @method('PUT')
+@section('content')
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Edit Product</h4>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('admin.product.update', 1) }}" method="POST">
+                @csrf
+                @method('PUT') {{-- WAJIB ada di Laravel untuk proses Edit --}}
 
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name" 
-                       value="{{ $user->name }}" required>
-            </div>
+                <div class="form-group mb-3">
+                    <label class="form-label font-weight-bold">Kode Barang</label>
+                    <input type="text" name="kode_barang" class="form-control" value="BRG001" required>
+                </div>
 
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" 
-                       value="{{ $user->email }}" required>
-            </div>
+                <div class="form-group mb-3">
+                    <label class="form-label font-weight-bold">Nama Barang</label>
+                    <input type="text" name="nama_barang" class="form-control" value="Sabun Cuci" required>
+                </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Password <small class="text-muted">(kosongkan jika tidak diubah)</small></label>
-                <input type="password" class="form-control" id="password" name="password">
-            </div>
+                <div class="form-group mb-3">
+                    <label class="form-label font-weight-bold">Satuan</label>
+                    <input type="text" name="satuan" class="form-control" value="Pcs" required>
+                </div>
 
-            <button type="submit" class="btn btn-primary">Update User</button>
-            <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a>
-        </form>
+                <div class="form-group mb-3">
+                    <label class="form-label font-weight-bold">Harga</label>
+                    <input type="number" name="harga" class="form-control" value="5000" required>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                    <a href="{{ route('admin.product.index') }}" class="btn btn-secondary">Kembali</a>
+                </div>
+            </form>
+        </div>
     </div>
-</x-appadmin-layout>
+</div>
+@endsection
