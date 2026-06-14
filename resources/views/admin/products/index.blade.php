@@ -1,14 +1,12 @@
 <x-appadmin-layout>
     <div class="container mt-4">
 
-        {{-- Flash message --}}
         @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
         @endif
 
-        {{-- Header --}}
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1>Manajemen Produk</h1>
             <button onclick="showModal('modalTambah')" class="btn btn-primary">
@@ -16,7 +14,6 @@
             </button>
         </div>
 
-        {{-- Tabel --}}
         <div class="card">
             <div class="card-body">
                 <table class="table table-bordered table-hover">
@@ -28,6 +25,7 @@
                             <th>Satuan</th>
                             <th>Harga</th>
                             <th>Aksi</th>
+                            <th>Kategori</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,23 +39,26 @@
                             </td>
                             <td>Rp {{ number_format($product->harga, 0, ',', '.') }}</td>
                             <td>
-                                <button onclick="openEdit({{ $product->id }}, '{{ $product->kode_barang }}', '{{ addslashes($product->nama_barang) }}', '{{ $product->satuan }}', '{{ $product->harga }}')"
+                                <button onclick="openEdit({{ $product->id }}, '{{ $product->kode_barang }}', '{{ addslashes($product->nama_barang) }}', '{{ $product->satuan }}', '{{ $product->harga }}', {{ $product->category_id ?? 'null' }})"
                                     class="btn btn-sm btn-warning">
                                     ✏️ Edit
                                 </button>
-                                <form method="POST" action="{{ route('admin.products.destroy', $product) }}" style="display:inline;"
-                                      onsubmit="return confirm('Yakin hapus produk ini?')">
+                                <form method="POST" action="{{ route('admin.products.destroy', $product) }}" style="display:inline"
+                                    onsubmit="return confirm('Yakin hapus produk ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">
-                                        🗑️ Hapus
+                                        🗑 Hapus
                                     </button>
                                 </form>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">{{ $product->category->nama ?? '-' }}</span>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-4">
+                            <td colspan="7" class="text-center text-muted py-4">
                                 Belum ada data produk. Klik "Tambah Produk" untuk memulai.
                             </td>
                         </tr>
@@ -68,7 +69,6 @@
         </div>
     </div>
 
-    {{-- Modal Tambah --}}
     <div id="modalTambah" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;align-items:center;justify-content:center;">
         <div style="background:white;border-radius:12px;padding:24px;width:420px;max-width:90vw;">
             <h5 class="mb-3">📦 Tambah Produk Baru</h5>
@@ -83,7 +83,6 @@
         </div>
     </div>
 
-    {{-- Modal Edit --}}
     <div id="modalEdit" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;align-items:center;justify-content:center;">
         <div style="background:white;border-radius:12px;padding:24px;width:420px;max-width:90vw;">
             <h5 class="mb-3">✏️ Edit Produk</h5>
@@ -100,33 +99,33 @@
     </div>
 
     <script>
-    function showModal(id) {
-        document.getElementById(id).style.display = 'flex';
-    }
-    function hideModal(id) {
-        document.getElementById(id).style.display = 'none';
-    }
-    function openEdit(id, kode, nama, satuan, harga) {
-        const form = document.getElementById('formEdit');
-        form.action = '/admin/products/' + id;
-        form.querySelector('[name=kode_barang]').value = kode;
-        form.querySelector('[name=nama_barang]').value = nama;
-        form.querySelector('[name=satuan]').value = satuan;
-        form.querySelector('[name=harga]').value = harga;
-        showModal('modalEdit');
-    }
-    ['modalTambah', 'modalEdit'].forEach(id => {
-        document.getElementById(id).addEventListener('click', function(e) {
-            if (e.target === this) hideModal(id);
-        });
-    });
-    @if($errors->any())
-        @if(old('_method') === 'PUT')
+        function showModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+        function hideModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+        function openEdit(id, kode, nama, satuan, harga, categoryId) {
+            const form = document.getElementById('formEdit');
+            form.action = '/admin/products/' + id;
+            form.querySelector('[name=kode_barang]').value = kode;
+            form.querySelector('[name=nama_barang]').value = nama;
+            form.querySelector('[name=satuan]').value = satuan;
+            form.querySelector('[name=harga]').value = harga;
+            form.querySelector('[name=category_id]').value = categoryId ?? '';
             showModal('modalEdit');
-        @else
-            showModal('modalTambah');
+        }
+        ['modalTambah', 'modalEdit'].forEach(id => {
+            document.getElementById(id).addEventListener('click', function(e) {
+                if (e.target === this) hideModal(id);
+            });
+        });
+        @if($errors->any())
+            @if(old('_method') === 'PUT')
+                showModal('modalEdit');
+            @else
+                showModal('modalTambah');
+            @endif
         @endif
-    @endif
     </script>
-
 </x-appadmin-layout>

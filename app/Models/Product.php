@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
+        'category_id',
         'kode_barang',
         'nama_barang',
         'satuan',
@@ -17,5 +18,10 @@ class Product extends Model
     public function getHargaFormattedAttribute(): string
     {
         return 'Rp ' . number_format($this->harga, 0, ',', '.');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

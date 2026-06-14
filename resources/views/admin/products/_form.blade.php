@@ -1,4 +1,20 @@
 <div class="mb-3">
+    <label class="form-label">Kategori</label>
+    <select name="category_id" class="form-select">
+        <option value="">-- Pilih Kategori --</option>
+        @foreach($categories as $cat)
+            <option value="{{ $cat->id }}"
+                {{ (old('category_id', $product->category_id ?? '') == $cat->id) ? 'selected' : '' }}>
+                {{ $cat->nama }}
+            </option>
+        @endforeach
+    </select>
+    @error('category_id')
+        <div class="text-danger small mt-1">{{ $message }}</div>
+    @enderror
+</div>
+
+<div class="mb-3">
     <label class="form-label">Kode Barang</label>
     <input name="kode_barang" type="text"
         value="{{ old('kode_barang', $product->kode_barang ?? '') }}"

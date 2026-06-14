@@ -16,6 +16,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/contact">Contact</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('customers.index') }}">Customer</a>
+                </li>
+                <li class="nav-item">
+    <a class="nav-link" href="{{ route('categories.index') }}">Categories</a>
+</li>
             </ul>
         </div>
     </div>
