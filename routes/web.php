@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () { return view('home'); });
@@ -27,4 +28,5 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::resource('users', UserController::class);
     Route::resource('products', ProductController::class)->names('admin.products');
+    Route::resource('sales', SaleController::class);
 });
